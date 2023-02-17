@@ -47,10 +47,10 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
- 
+
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
           source={require("./assets/images/BG.jpg")}
           style={styles.image}
@@ -64,9 +64,7 @@ export default function App() {
                 marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
-              <View onLayout={onLayoutRootView}>
-                <Text style={styles.titleForm}>Реєстрація</Text>
-              </View>
+              <Text style={styles.titleForm}>Реєстрація</Text>
 
               <TextInput
                 style={styles.input}
@@ -102,9 +100,7 @@ export default function App() {
                 onPress={keyboardHide}
                 onFocus={() => setIsShowKeyboard(true)}
               >
-                <View onLayout={onLayoutRootView}>
-                  <Text style={styles.titleButton}>Зареєструватися</Text>
-                </View>
+                <Text style={styles.titleButton}>Зареєструватися</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
