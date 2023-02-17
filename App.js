@@ -1,86 +1,116 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import {
   StyleSheet,
   View,
   TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  Button,
+  TouchableOpacity,
   Text,
   ImageBackground,
+  Platform,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
-import * as Font from "expo-font";
-import { AppLoading } from "expo";
+
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+};
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setState] = useState(initialState);
 
-  const nameHandler = (text) => setName(text);
-  const emailHandler = (text) => setEmail(text);
-  const passwordHandler = (text) => setPassword(text);
-
-  const onLogin = () => {
-    Alert.alert(
-      "Реєстрація успішна",
-      `Користувач: - ${name}
-      Емейл: - ${email}
-      Пароль: - ${password}`
-    );
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+    console.log(state);
+    setState(initialState);
   };
 
+  const [fontsLoaded] = useFonts({
+    "Roboto-Medium": require("./assets/fonts/Roboto/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+ 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("../myProject/src/images/BG.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        {/* <View style={styles.containerForm}> */}
-        <Text style={styles.title}>Реєстрація</Text>
-        <View style={styles.containerInput}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS == "ios" ? "padding" : "height"}
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require("./assets/images/BG.jpg")}
+          style={styles.image}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
+            <View
+              style={{
+                ...styles.containerForm,
+                marginBottom: isShowKeyboard ? 0 : 32,
+              }}
             >
+              <View onLayout={onLayoutRootView}>
+                <Text style={styles.titleForm}>Реєстрація</Text>
+              </View>
+
               <TextInput
-                value={name}
-                onChangeText={nameHandler}
+                style={styles.input}
+                value={state.name}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, name: value }))
+                }
                 placeholder="Логін"
-                style={styles.input}
-                textAlign={"left"}
+                onFocus={() => setIsShowKeyboard(true)}
               />
               <TextInput
-                value={email}
-                onChangeText={emailHandler}
+                style={styles.input}
+                value={state.email}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
                 placeholder="Адреса електронної пошти"
-                style={styles.input}
-                textAlign={"left"}
+                onFocus={() => setIsShowKeyboard(true)}
               />
               <TextInput
-                value={password}
-                onChangeText={passwordHandler}
+                style={styles.input}
+                value={state.password}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, password: value }))
+                }
                 placeholder="Пароль"
                 secureTextEntry={true}
-                style={styles.input}
-                textAlign={"left"}
+                onFocus={() => setIsShowKeyboard(true)}
               />
-            </KeyboardAvoidingView>
-          </TouchableWithoutFeedback>
-        </View>
-        <Button
-          title={"Зареєструватися"}
-          style={styles.button}
-          onPress={onLogin}
-        />
-
-        {/* </View> */}
-      </ImageBackground>
-    </View>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.7}
+                onPress={keyboardHide}
+                onFocus={() => setIsShowKeyboard(true)}
+              >
+                <View onLayout={onLayoutRootView}>
+                  <Text style={styles.titleButton}>Зареєструватися</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -90,51 +120,49 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    justifyContent: "center",
+    resizeMode: "cover",
+    justifyContent: "flex-end",
   },
   containerForm: {
-    position: "absolute",
-    top: 263,
-    height: 549,
-    backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    justifyContent: "center",
-    // alignItems: "center"
+    backgroundColor: "#ffffff",
   },
-  title: {
+  titleForm: {
     marginTop: 32,
-    
+    marginBottom: 33,
     color: "#000000",
     textAlign: "center",
     fontSize: 30,
-    fontWeight: "500",
+    fontFamily: "Roboto-Medium",
   },
   input: {
     height: 50,
-
     paddingTop: 16,
     paddingBottom: 15,
     paddingLeft: 16,
     paddingRight: 15,
-
     marginBottom: 16,
     marginHorizontal: 16,
-
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    // color: "#212121",
-    color: "#E8E8E8",
     borderRadius: 8,
+    borderWidth: 1,
+    color: "#E8E8E8",
+    borderColor: "#E8E8E8",
+    textAlign: "left",
   },
-  containerInput: {
-    marginTop: 33,
-    marginBottom: 43,
-  },
-
   button: {
-    padding: 16,
-    color: "#ffffff",
+    height: 51,
+    marginTop: 43,
+    marginBottom: 32,
+    marginHorizontal: 16,
+    borderRadius: 100,
     backgroundColor: "#FF6C00",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleButton: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    fontFamily: "Roboto-Regular",
   },
 });
