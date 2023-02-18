@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useWindowDimensions } from "react-native";
+import React, { useState, useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import {
@@ -13,50 +12,19 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
 } from "react-native";
 
 const initialState = {
-  name: "",
+ 
   email: "",
   password: "",
 };
 
 SplashScreen.preventAutoHideAsync();
 
-// const windowDimensions = Dimensions.get("window");
-// const screenDimensions = Dimensions.get("screen");
-
 export default function App() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  // const [dimensions, setDimensions] = useState({
-  //   window: windowDimensions,
-  //   screen: screenDimensions,
-  // });
-
-  // useEffect(() => {
-  //   const subscription = Dimensions.addEventListener(
-  //     "change",
-  //     ({ window, screen }) => {
-  //       setDimensions({ window, screen });
-  //     }
-  //   );
-  //   return () => subscription?.remove();
-  // });
-
-  // const { height, width, scale, fontScale } = useWindowDimensions();
-
-  useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width;
-      console.log("width", width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    // return () => {
-    //   Dimensions.removeEventListener("change", onChange);
-    // };
-  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -90,31 +58,14 @@ export default function App() {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            {/* <View>
-              <Text style={styles.dimensionsTtl}>Window Dimension Data</Text>
-              <Text style={styles.dimensionsTxt}>Height: {height}</Text>
-              <Text style={styles.dimensionsTxt}>Width: {width}</Text>
-              <Text style={styles.dimensionsTxt}>Font scale: {fontScale}</Text>
-              <Text style={styles.dimensionsTxt}>Pixel ratio: {scale}</Text>
-            </View> */}
-
             <View
               style={{
                 ...styles.containerForm,
-                // marginBottom: isShowKeyboard ? 0 : 32,
+                marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
-              <Text style={styles.titleForm}>Реєстрація</Text>
-
-              <TextInput
-                style={styles.input}
-                value={state.name}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, name: value }))
-                }
-                placeholder="Логін"
-                onFocus={() => setIsShowKeyboard(true)}
-              />
+              <Text style={styles.titleForm}>Увійти</Text>
+              
               <TextInput
                 style={styles.input}
                 value={state.email}
@@ -140,7 +91,7 @@ export default function App() {
                 onPress={keyboardHide}
                 onFocus={() => setIsShowKeyboard(true)}
               >
-                <Text style={styles.titleButton}>Зареєструватися</Text>
+                <Text style={styles.titleButton}>Увійти</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -200,16 +151,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     fontFamily: "Roboto-Regular",
-  },
-  dimensionsTtl: {
-    fontSize: 16,
-    marginVertical: 10,
-    color: "#FFFFFF",
-    marginHorizontal: 16,
-  },
-  dimensionsTxt: {
-    fontSize: 14,
-    color: "#FFFFFF",
-    marginHorizontal: 16,
   },
 });
