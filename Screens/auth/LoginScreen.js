@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useWindowDimensions } from "react-native";
+import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import {
   StyleSheet,
@@ -14,25 +16,35 @@ import {
   Dimensions,
 } from "react-native";
 
-const initialState = {  
+const initialState = {
   email: "",
   password: "",
 };
 
 SplashScreen.preventAutoHideAsync();
 
+const windowDimensions = Dimensions.get("window");
+const screenDimensions = Dimensions.get("screen");
+
 export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setState] = useState(initialState);  
+  const [state, setState] = useState(initialState);
+  const [dimensions, setDimensions] = useState({
+    window: windowDimensions,
+    screen: screenDimensions,
+  });
 
   useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width;
-      console.log("width", width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    
-  }, []);
+    const subscription = Dimensions.addEventListener(
+      "change",
+      ({ window, screen }) => {
+        setDimensions({ window, screen });
+      }
+    );
+    return () => subscription?.remove();
+  });
+
+  const { height, width } = useWindowDimensions();
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -40,25 +52,40 @@ export default function LoginScreen() {
     console.log(state);
     setState(initialState);
   };
-  
+
+  const [fontsLoaded] = useFonts({
+    "Roboto-Medium": require("../../assets/fonts/Roboto/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../../assets/fonts/Roboto/Roboto-Regular.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
-          source={require("./assets/images/BG.jpg")}
+          source={require("../../assets/images/BG.jpg")}
           style={styles.image}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-           
             <View
               style={{
-                ...styles.containerForm                
+                ...styles.containerForm,
+                width: width,
+                // marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
-              <Text style={styles.titleForm}>Увійти</Text>
+              <Text style={styles.titleForm}>Вхід</Text>
 
               <TextInput
                 style={styles.input}
@@ -85,7 +112,7 @@ export default function LoginScreen() {
                 onPress={keyboardHide}
                 onFocus={() => setIsShowKeyboard(true)}
               >
-                <Text style={styles.titleButton}>Увійти</Text>
+                <Text style={styles.titleButton}>Вхід</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -103,6 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
+    alignItems: "center",
   },
   containerForm: {
     borderTopLeftRadius: 25,
