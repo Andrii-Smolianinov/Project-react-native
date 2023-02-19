@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { useFonts } from "expo-font";
+import React, { useState, useCallback, useEffect } from "react";
+import { useWindowDimensions } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import {
   StyleSheet,
@@ -9,9 +9,8 @@ import {
   Text,
   ImageBackground,
   Platform,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
+  KeyboardAvoidingView, 
+  Dimensions,
 } from "react-native";
 
 const initialState = {
@@ -22,35 +21,45 @@ const initialState = {
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+const windowDimensions = Dimensions.get("window");
+const screenDimensions = Dimensions.get("screen");
+
+export default function RegistrationScreen() {
+  
   const [state, setState] = useState(initialState);
+  // const [dimensions, setDimensions] = useState({
+  //   window: windowDimensions,
+  //   screen: screenDimensions,
+  // });
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    setState(initialState);
-  };
+ 
+  // useEffect(() => {
+  //   const subscription = Dimensions.addEventListener(
+  //     "change",
+  //     ({ window, screen }) => {
+  //       setDimensions({ window, screen });
+  //     }
+  //   );
+  //   return () => subscription?.remove();
+  // });
 
-  const [fontsLoaded] = useFonts({
-    "Roboto-Medium": require("./assets/fonts/Roboto/Roboto-Medium.ttf"),
-    "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
-  });
+  const { height, width, scale, fontScale } = useWindowDimensions();
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width;
+      console.log("width", width);
+    };
+    Dimensions.addEventListener("change", onChange);
+    // return () => {
+    //   Dimensions.removeEventListener("change", onChange);
+    // };
+  }, []);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container} onLayout={onLayoutRootView}>
+    <View>
         <ImageBackground
           source={require("./assets/images/BG.jpg")}
           style={styles.image}
@@ -58,10 +67,18 @@ export default function App() {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
+            {<View>
+              <Text style={styles.dimensionsTtl}>Window Dimension Data</Text>
+              <Text style={styles.dimensionsTxt}>Height: {height}</Text>
+              <Text style={styles.dimensionsTxt}>Width: {width}</Text>
+              <Text style={styles.dimensionsTxt}>Font scale: {fontScale}</Text>
+              <Text style={styles.dimensionsTxt}>Pixel ratio: {scale}</Text>
+            </View>}
+
             <View
               style={{
                 ...styles.containerForm,
-                marginBottom: isShowKeyboard ? 0 : 32,
+                // marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
               <Text style={styles.titleForm}>Реєстрація</Text>
@@ -106,7 +123,6 @@ export default function App() {
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
-    </TouchableWithoutFeedback>
   );
 }
 
@@ -160,5 +176,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     fontFamily: "Roboto-Regular",
+  },
+  dimensionsTtl: {
+    fontSize: 16,
+    marginVertical: 10,
+    color: "#FFFFFF",
+    marginHorizontal: 16,
+  },
+  dimensionsTxt: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    marginHorizontal: 16,
   },
 });

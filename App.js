@@ -24,41 +24,30 @@ const initialState = {
 
 SplashScreen.preventAutoHideAsync();
 
-// const windowDimensions = Dimensions.get("window");
-// const screenDimensions = Dimensions.get("screen");
+const windowDimensions = Dimensions.get("window");
+const screenDimensions = Dimensions.get("screen");
 
 export default function App() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  // const [dimensions, setDimensions] = useState({
-  //   window: windowDimensions,
-  //   screen: screenDimensions,
-  // });
-
-  // useEffect(() => {
-  //   const subscription = Dimensions.addEventListener(
-  //     "change",
-  //     ({ window, screen }) => {
-  //       setDimensions({ window, screen });
-  //     }
-  //   );
-  //   return () => subscription?.remove();
-  // });
-
-  // const { height, width, scale, fontScale } = useWindowDimensions();
+  const [dimensions, setDimensions] = useState({
+    window: windowDimensions,
+    screen: screenDimensions,
+  });
 
   useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width;
-      console.log("width", width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    // return () => {
-    //   Dimensions.removeEventListener("change", onChange);
-    // };
-  }, []);
+    const subscription = Dimensions.addEventListener(
+      "change",
+      ({ window, screen }) => {
+        setDimensions({ window, screen });
+      }
+    );
+    return () => subscription?.remove();
+  });
 
-  const keyboardHide = () => {
+  const { height, width } = useWindowDimensions();
+
+   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
@@ -90,17 +79,16 @@ export default function App() {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            {/* <View>
+            <View>
               <Text style={styles.dimensionsTtl}>Window Dimension Data</Text>
               <Text style={styles.dimensionsTxt}>Height: {height}</Text>
-              <Text style={styles.dimensionsTxt}>Width: {width}</Text>
-              <Text style={styles.dimensionsTxt}>Font scale: {fontScale}</Text>
-              <Text style={styles.dimensionsTxt}>Pixel ratio: {scale}</Text>
-            </View> */}
+              <Text style={styles.dimensionsTxt}>Width: {width}</Text>              
+            </View> 
 
             <View
               style={{
                 ...styles.containerForm,
+                width: width                
                 // marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
@@ -158,6 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
+    alignItems: "center"
   },
   containerForm: {
     borderTopLeftRadius: 25,

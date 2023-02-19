@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from "react";
-import { useFonts } from "expo-font";
+import React, { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import {
   StyleSheet,
@@ -12,19 +11,28 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 
-const initialState = {
- 
+const initialState = {  
   email: "",
   password: "",
 };
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
+export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState);  
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width;
+      console.log("width", width);
+    };
+    Dimensions.addEventListener("change", onChange);
+    
+  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -32,21 +40,7 @@ export default function App() {
     console.log(state);
     setState(initialState);
   };
-
-  const [fontsLoaded] = useFonts({
-    "Roboto-Medium": require("./assets/fonts/Roboto/Roboto-Medium.ttf"),
-    "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
+  
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -58,14 +52,14 @@ export default function App() {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
+           
             <View
               style={{
-                ...styles.containerForm,
-                marginBottom: isShowKeyboard ? 0 : 32,
+                ...styles.containerForm                
               }}
             >
               <Text style={styles.titleForm}>Увійти</Text>
-              
+
               <TextInput
                 style={styles.input}
                 value={state.email}
@@ -151,5 +145,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     fontFamily: "Roboto-Regular",
+  },
+  dimensionsTtl: {
+    fontSize: 16,
+    marginVertical: 10,
+    color: "#FFFFFF",
+    marginHorizontal: 16,
+  },
+  dimensionsTxt: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    marginHorizontal: 16,
   },
 });
