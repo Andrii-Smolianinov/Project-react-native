@@ -14,6 +14,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
+  Button,
 } from "react-native";
 
 const initialState = {
@@ -26,7 +27,7 @@ SplashScreen.preventAutoHideAsync();
 const windowDimensions = Dimensions.get("window");
 const screenDimensions = Dimensions.get("screen");
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimensions] = useState({
@@ -114,6 +115,10 @@ export default function LoginScreen() {
               >
                 <Text style={styles.titleButton}>Вхід</Text>
               </TouchableOpacity>
+              <Button
+                onPress={() => navigation.navigate("Registration")}
+                title="Немає аккаунта? Зареєструватися"
+              />
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>

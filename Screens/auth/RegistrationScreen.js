@@ -14,6 +14,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
+  Button,
 } from "react-native";
 
 const initialState = {
@@ -27,7 +28,7 @@ SplashScreen.preventAutoHideAsync();
 const windowDimensions = Dimensions.get("window");
 const screenDimensions = Dimensions.get("screen");
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimensions] = useState({
@@ -47,7 +48,7 @@ export default function RegistrationScreen() {
 
   const { height, width } = useWindowDimensions();
 
-   const keyboardHide = () => {
+  const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
@@ -88,7 +89,7 @@ export default function RegistrationScreen() {
             <View
               style={{
                 ...styles.containerForm,
-                width: width                
+                width: width,
                 // marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
@@ -130,6 +131,10 @@ export default function RegistrationScreen() {
               >
                 <Text style={styles.titleButton}>Зареєструватися</Text>
               </TouchableOpacity>
+              <Button
+                onPress={() => navigation.navigate("Login")}
+                title="Вже є аккаунт? Увійти"
+              />
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
-    alignItems: "center"
+    alignItems: "center",
   },
   containerForm: {
     borderTopLeftRadius: 25,

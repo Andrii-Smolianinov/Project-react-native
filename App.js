@@ -1,17 +1,21 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useWindowDimensions } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import {} from "react-native";
-import RegistrationScreen from "./Screens/auth/RegistrationScreen";
 
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from "@react-navigation/native";
+import RegistrationScreen from "./Screens/auth/RegistrationScreen";
 import LoginScreen from "./Screens/auth/LoginScreen";
 
+const AuthStack = createNativeStackNavigator();
+
 export default function App() {
+ 
   return (
-    <>
-      <RegistrationScreen />
-      {/* <LoginScreen/> */}
-    </>
+    <NavigationContainer>
+      <AuthStack.Navigator initialRouteName="Registration">
+        <AuthStack.Screen options={{headerShown: false}} name="Registration" component={RegistrationScreen}  />
+        <AuthStack.Screen options={{headerShown: false}} name="Login" component={LoginScreen} />
+      </AuthStack.Navigator>
+    </NavigationContainer>
   );
 }
