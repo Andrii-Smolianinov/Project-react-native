@@ -80,17 +80,10 @@ export default function RegistrationScreen({ navigation }) {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            {/* <View>
-              <Text style={styles.dimensionsTtl}>Window Dimension Data</Text>
-              <Text style={styles.dimensionsTxt}>Height: {height}</Text>
-              <Text style={styles.dimensionsTxt}>Width: {width}</Text>              
-            </View>  */}
-
             <View
               style={{
                 ...styles.containerForm,
                 width: width,
-                // marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
               <Text style={styles.titleForm}>Реєстрація</Text>
@@ -131,10 +124,13 @@ export default function RegistrationScreen({ navigation }) {
               >
                 <Text style={styles.titleButton}>Зареєструватися</Text>
               </TouchableOpacity>
-              <Button
+
+              <TouchableOpacity
                 onPress={() => navigation.navigate("Login")}
-                title="Вже є аккаунт? Увійти"
-              />
+                style={{ marginTop: 16, marginBottom: 76, alignSelf: "center" }}
+              >
+                <Text style={styles.navigationLink}>Вже є аккаунт? Увійти</Text>
+              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -191,19 +187,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleButton: {
-    fontSize: 16,
     color: "#FFFFFF",
+    fontSize: 16,
     fontFamily: "Roboto-Regular",
   },
   dimensionsTtl: {
+    color: "#FFFFFF",
     fontSize: 16,
     marginVertical: 10,
-    color: "#FFFFFF",
     marginHorizontal: 16,
   },
   dimensionsTxt: {
-    fontSize: 14,
     color: "#FFFFFF",
+    fontSize: 14,
     marginHorizontal: 16,
+  },
+  navigationLink: {
+    color: "#1B4371",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
   },
 });

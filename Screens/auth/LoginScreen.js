@@ -83,7 +83,6 @@ export default function LoginScreen({ navigation }) {
               style={{
                 ...styles.containerForm,
                 width: width,
-                // marginBottom: isShowKeyboard ? 0 : 32,
               }}
             >
               <Text style={styles.titleForm}>Вхід</Text>
@@ -115,10 +114,15 @@ export default function LoginScreen({ navigation }) {
               >
                 <Text style={styles.titleButton}>Вхід</Text>
               </TouchableOpacity>
-              <Button
+
+              <TouchableOpacity
                 onPress={() => navigation.navigate("Registration")}
-                title="Немає аккаунта? Зареєструватися"
-              />
+                style={{ marginTop: 16, marginBottom: 76, alignSelf: "center" }}
+              >
+                <Text style={styles.navigationLink}>
+                  Немає аккаунта? Зареєструватися
+                </Text>
+              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -189,5 +193,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#FFFFFF",
     marginHorizontal: 16,
+  },
+  navigationLink: {
+    color: "#1B4371",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
   },
 });
