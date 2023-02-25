@@ -1,8 +1,8 @@
-
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-export default function PostsScreen() {
+export default function PostsScreen({ route }) {
+  console.log("route.params", route.params);
   return (
     <View style={styles.container}>
       <Text>PostsScreen</Text>
@@ -13,7 +13,7 @@ export default function PostsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
   },
-})
+});
