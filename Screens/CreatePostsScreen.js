@@ -22,7 +22,7 @@ export default function CreatePostsScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
 
       setHasPermission(status === "granted");
@@ -38,6 +38,7 @@ export default function CreatePostsScreen({ navigation }) {
 
   const sendPhoto = () => {
     navigation.navigate("Публікації", { photo });
+    // setPhoto('')
   };
 
   return (
@@ -45,19 +46,17 @@ export default function CreatePostsScreen({ navigation }) {
       <Camera
         style={styles.camera}
         type={type}
-        ref={(ref) => {
-          setCameraRef(ref);
-        }}
+        ref={setCameraRef}
       >
         {photo && (
           <View style={styles.photoContainer}>
-          <Image
-            style={{ height: 240, width: width }}
-            source={{ uri: photo }}
-          />
-        </View>
+            <Image
+              style={{ height: 240, width: width }}
+              source={{ uri: photo }}
+            />
+          </View>
         )}
-        
+
         <TouchableOpacity
           style={styles.flipContainer}
           onPress={() => {
@@ -78,6 +77,7 @@ export default function CreatePostsScreen({ navigation }) {
           style={styles.cameraButton}
           onPress={async () => {
             if (cameraRef) {
+              console.log("camera---->", cameraRef);
               const { uri } = await cameraRef.takePictureAsync();
               await MediaLibrary.createAssetAsync(uri);
               setPhoto(uri);
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 16,    
+    marginHorizontal: 16,
   },
   photoContainer: {
     position: "absolute",
@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
     right: 0,
     borderColor: "#5cda13",
     borderWidth: 1,
-    borderRadius: 8,    
+    borderRadius: 8,
   },
   flipContainer: {
     position: "absolute",
-    left: 0,
+    left: 10,
   },
   cameraButton: {
     borderWidth: 1,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
-  },  
+  },
   sendBtn: {
     height: 51,
     marginTop: 43,

@@ -85,6 +85,7 @@ export default function LoginScreen({ navigation }) {
                 width: width,
               }}
             >
+              <View style={styles.avatar}></View>
               <Text style={styles.titleForm}>Вхід</Text>
 
               <TextInput
@@ -146,8 +147,17 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     backgroundColor: "#ffffff",
   },
+  avatar: {
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    position: "absolute",
+    top: -60,
+    left: "35%",
+    alignItems: "center",
+  },
   titleForm: {
-    marginTop: 32,
+    marginTop: 92,
     marginBottom: 33,
     color: "#000000",
     textAlign: "center",
