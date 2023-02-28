@@ -35,9 +35,9 @@ export const useRoute = (isAuth) => {
   }
   return (
     <Tabs.Navigator screenOptions={{showLabel: false}}>
-      <Tabs.Screen options={{tabBarIcon: ({ focused, size, color }) => <AntDesign name="appstore-o" size={size} color={color} />}} name="Публікації" component={PostsScreen} />
-      <Tabs.Screen options={{tabBarIcon: ({ focused, size, color }) => <Feather name="plus" size={size} color={color} />}} name="Створити публікацію" component={CreatePostsScreen} />
-      <Tabs.Screen options={{headerShown: false, tabBarIcon: ({ focused, size, color }) => <SimpleLineIcons name="user" size={size} color={color} />}} name="Profile" 
+      <Tabs.Screen options={{tabBarShowLabel: false, tabBarIcon: ({ focused, size, color }) => <AntDesign name="appstore-o" size={size} color={color} />}} name="Публікації" component={PostsScreen} />
+      <Tabs.Screen options={{tabBarShowLabel: false, tabBarIcon: ({ focused, size, color }) => <Feather name="plus" size={size} color={color} />}} name="Створити публікацію" component={CreatePostsScreen} />
+      <Tabs.Screen options={{tabBarShowLabel: false, headerShown: false, tabBarIcon: ({ focused, size, color }) => <SimpleLineIcons name="user" size={size} color={color} />}} name="Profile" 
       component={ProfileScreen} />
     </Tabs.Navigator>
   );

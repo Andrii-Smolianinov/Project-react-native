@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import * as Location from 'expo-location'; 
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -29,6 +31,15 @@ export default function CreatePostsScreen({ navigation }) {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+    })();
+  }, []);
+
   if (hasPermission === null) {
     return <View />;
   }
@@ -36,9 +47,20 @@ export default function CreatePostsScreen({ navigation }) {
     return <Text>No access to camera</Text>;
   }
 
+  const takePhoto = async () => {
+    if (cameraRef) {
+      console.log("camera---->", cameraRef);
+      const { uri } = await cameraRef.takePictureAsync();              
+      await MediaLibrary.createAssetAsync(uri);
+      setPhoto(uri);
+      
+      const location = await Location.getCurrentPositionAsync();
+      console.log("location---->", location);             
+    }
+  }
+
   const sendPhoto = () => {
-    navigation.navigate("Публікації", { photo });
-    // setPhoto('')
+    navigation.navigate("Публікації", { photo });   
   };
 
   return (
@@ -75,14 +97,7 @@ export default function CreatePostsScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.cameraButton}
-          onPress={async () => {
-            if (cameraRef) {
-              console.log("camera---->", cameraRef);
-              const { uri } = await cameraRef.takePictureAsync();
-              await MediaLibrary.createAssetAsync(uri);
-              setPhoto(uri);
-            }
-          }}
+          onPress={takePhoto}
         >
           <FontAwesome name="camera" size={24} color="white" />
         </TouchableOpacity>
